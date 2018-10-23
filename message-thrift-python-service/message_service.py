@@ -1,6 +1,5 @@
 from message.api import MessageService
 
-from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
@@ -50,11 +49,8 @@ if __name__ == '__main__':
 
     transport = TSocket.TServerSocket("localhost", "9090")
 
-    tFactory = TTransport.TFramedTransportFactory()
 
-    pFactory = TBinaryProtocol.TBinaryProtocolFactory()
-
-    server = TServer.TSimpleServer(processor, transport, tFactory, pFactory)
+    server = TServer.TSimpleServer(processor, transport)
 
     print("python thrift message service start")
 
