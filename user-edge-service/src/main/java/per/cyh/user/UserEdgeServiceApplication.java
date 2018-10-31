@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Created by cyh on 2018/10/25.
  */
 @SpringBootApplication
-public class ServiceApplication {
+public class UserEdgeServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ServiceApplication.class, args);
+        SpringApplication.run(UserEdgeServiceApplication.class, args);
     }
 }
