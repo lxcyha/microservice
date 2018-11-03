@@ -1,6 +1,5 @@
 package per.cyh.user.service;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +18,11 @@ public class UserServiceImpl implements UserService.Iface {
     UserRepository userRepository;
 
     public UserInfo getUserById(int id) throws TException {
-        return toThriftModel(userRepository.getOne(id));
+        return toThriftModel(userRepository.findById(id).get());
     }
 
     public UserInfo getUserByName(String username) throws TException {
-        return toThriftModel(userRepository.findByUsername(username));
+        return toThriftModel(userRepository.findUserInfoEntityByUsername(username));
     }
 
     public void registerUser(UserInfo userInfo) throws TException {
@@ -33,24 +32,22 @@ public class UserServiceImpl implements UserService.Iface {
     private UserInfoEntity toPojo(UserInfo userInfo) {
 
         UserInfoEntity userInfoEntity = new UserInfoEntity();
-        try {
-            PropertyUtils.copyProperties(userInfoEntity, userInfo);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        userInfoEntity.setPassword(userInfo.getPassword());
+        userInfoEntity.setEmail(userInfo.getEmail());
+        userInfoEntity.setId(userInfo.getId());
+        userInfoEntity.setRealName(userInfo.getRealName());
+        userInfoEntity.setMobile(userInfo.getMobile());
         return userInfoEntity;
     }
 
     private UserInfo toThriftModel(UserInfoEntity userInfoEntity) {
 
         UserInfo userInfo = new UserInfo();
-        try {
-            PropertyUtils.copyProperties(userInfo, userInfoEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return userInfo;
-        }
+        userInfo.setPassword(userInfoEntity.getPassword());
+        userInfo.setEmail(userInfoEntity.getEmail());
+        userInfo.setId(userInfoEntity.getId());
+        userInfo.setRealName(userInfoEntity.getRealName());
+        userInfo.setMobile(userInfoEntity.getMobile());
         return userInfo;
     }
 

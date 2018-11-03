@@ -1,14 +1,12 @@
 package per.cyh.user.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 import per.cyh.user.UserInfoEntity;
 
 /**
  * Created by cyh on 2018/11/3.
  */
-@Repository
-public interface UserRepository extends JpaRepository<UserInfoEntity, Integer> {
+public interface UserRepository extends CrudRepository<UserInfoEntity, Integer> {
 
-    UserInfoEntity findByUsername(String username);
+    UserInfoEntity findUserInfoEntityByUsername(String username);
 }
