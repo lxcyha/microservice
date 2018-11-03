@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import per.cyh.thrift.user.UserInfo;
 import per.cyh.thrift.user.UserService;
-import per.cyh.user.mapper.UserMapper;
+import per.cyh.user.repository.UserRepository;
 
 /**
  * Created by cyh on 2018/10/23.
@@ -14,17 +14,17 @@ import per.cyh.user.mapper.UserMapper;
 public class UserServiceImpl implements UserService.Iface {
 
     @Autowired
-    private UserMapper userMapper;
+    UserRepository userRepository;
 
     public UserInfo getUserById(int id) throws TException {
-        return userMapper.getUserById(id);
+        return userRepository.getOne(id);
     }
 
     public UserInfo getUserByName(String username) throws TException {
-        return userMapper.getUserByName(username);
+        return userRepository.getUserInfoByUsername(username);
     }
 
     public void registerUser(UserInfo userInfo) throws TException {
-        userMapper.registerUser(userInfo);
+        userRepository.save(userInfo);
     }
 }

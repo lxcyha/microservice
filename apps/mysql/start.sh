@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-#note that setting my.cnf in conf 
-
 cur_dir=`pwd`
 docker stop mysql
 docker rm mysql
