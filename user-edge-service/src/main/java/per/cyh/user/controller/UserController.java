@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import per.cyh.thrift.user.UserInfo;
+import per.cyh.user.UserInfoDTO;
 import per.cyh.user.response.Response;
 import per.cyh.user.thrift.ServiceProvider;
 
@@ -28,12 +29,17 @@ public class UserController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(){
+        return "login";
+    }
+
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response login(@RequestParam("username") String username,
                           @RequestParam("password") String password) {
 
-        UserInfo userInfo = null;
+        UserInfo userInfo;
         try {
             userInfo = serviceProvider.getUserService().getUserByName(username);
         } catch (TException e) {
@@ -45,14 +51,14 @@ public class UserController {
             return Response.USERNAME_OR_PASSWORD_INVALID;
         }
 
-        if (!md5(password).equals(userInfo.getPassword())) {
+        if (!userInfo.getPassword().equals(md5(password))) {
             return Response.USERNAME_OR_PASSWORD_INVALID;
         }
 
         // create token
         String token = genToken();
 
-        redisTemplate.opsForValue().set(userInfo.getId(), token);
+        redisTemplate.opsForValue().set(token, userInfo);
 
         return Response.SUCCESS;
     }
@@ -62,26 +68,13 @@ public class UserController {
     public Response register(UserInfo userInfo) {
 
         try {
+            userInfo.setPassword(md5(userInfo.getPassword()));
             serviceProvider.getUserService().registerUser(userInfo);
         } catch (TException e) {
             e.printStackTrace();
-            return Response.USERNAME_OR_PASSWORD_INVALID;
+            return Response.REGISTER_ERROR;
         }
-
-        if (userInfo == null) {
-            return Response.USERNAME_OR_PASSWORD_INVALID;
-        }
-
-//        if (!userInfo.getPassword().equals(password)) {
-//            return Response.USERNAME_OR_PASSWORD_INVALID;
-//        }
-
-        // create token
-        String token = genToken();
-
-        redisTemplate.opsForValue().set(userInfo.getId(), token);
-
-        return Response.USERNAME_OR_PASSWORD_INVALID;
+        return Response.SUCCESS;
     }
 
     private String genToken() {

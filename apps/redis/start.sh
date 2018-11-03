@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+# note that chmod 777 log
+
 cur_dir=`pwd`
 docker stop redis
 docker rm redis

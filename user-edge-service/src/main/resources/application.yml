@@ -8,7 +8,15 @@ thrift:
 spring:
   redis:
     port: 6379
-    host: localhost
+    host: 192.168.1.16
     timeout: 10000
+  thymeleaf:
+    cache: false
+  cache:
+    redis:
+      time-to-live: 10000
+
+
+
 
 
