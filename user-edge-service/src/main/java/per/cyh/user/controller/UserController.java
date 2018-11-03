@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import per.cyh.thrift.user.UserInfo;
 import per.cyh.user.UserInfoDTO;
+import per.cyh.user.redis.RedisClient;
 import per.cyh.user.response.Response;
 import per.cyh.user.thrift.ServiceProvider;
 
@@ -27,7 +28,7 @@ public class UserController {
     private ServiceProvider serviceProvider;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisClient redisClient;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(){
@@ -58,7 +59,7 @@ public class UserController {
         // create token
         String token = genToken();
 
-        redisTemplate.opsForValue().set(token, userInfo);
+        redisClient.set(token, userInfo,3600);
 
         return Response.SUCCESS;
     }
