@@ -47,10 +47,6 @@ public class ThriftServer {
         TServer server = new TNonblockingServer(args);
 
         System.out.println("starting ");
-
         server.serve();
-
-        System.out.println("ending ");
-
     }
 }
