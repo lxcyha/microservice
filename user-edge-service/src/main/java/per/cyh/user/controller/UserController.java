@@ -6,12 +6,9 @@ import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import per.cyh.thrift.user.UserInfo;
-import per.cyh.user.dto.UserInfoDTO;
+import per.cyh.thrift.user.dto.UserInfoDTO;
 import per.cyh.user.redis.RedisClient;
 import per.cyh.user.response.LoginResponse;
 import per.cyh.user.response.Response;
@@ -24,6 +21,7 @@ import java.util.Random;
  * Created by cyh on 2018/10/26.
  */
 @Controller
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -97,6 +95,12 @@ public class UserController {
         }
 
         return Response.SUCCESS;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/authentication", method = RequestMethod.POST)
+    public UserInfoDTO authentication(@RequestHeader("token") String token){
+        return redisClient.get(token);
     }
 
     @ResponseBody
