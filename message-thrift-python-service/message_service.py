@@ -47,12 +47,14 @@ if __name__ == '__main__':
     handler = MessageServiceHandler()
     processor = MessageService.Processor(handler)
 
-    transport = TSocket.TServerSocket("localhost", "9090")
+    transport = TSocket.TServerSocket(host="127.0.0.1", port=9090)
 
+    tFactory = TTransport.TFramedTransportFactory()
 
-    server = TServer.TSimpleServer(processor, transport)
+    pFactory = TBinaryProtocol.TBinaryProtocolFactory()
+
+    server = TServer.TSimpleServer(processor, transport, tFactory, pFactory)
 
     print("python thrift message service start")
-
     server.serve()
     print("python thrift message service exit")

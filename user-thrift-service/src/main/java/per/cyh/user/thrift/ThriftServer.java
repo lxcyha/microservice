@@ -50,7 +50,6 @@ public class ThriftServer {
 
         server.serve();
 
-
         System.out.println("ending ");
 
     }

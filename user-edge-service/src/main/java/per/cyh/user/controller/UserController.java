@@ -1,17 +1,19 @@
 package per.cyh.user.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.thrift.TException;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import per.cyh.thrift.user.UserInfo;
-import per.cyh.user.UserInfoDTO;
+import per.cyh.user.dto.UserInfoDTO;
 import per.cyh.user.redis.RedisClient;
+import per.cyh.user.response.LoginResponse;
 import per.cyh.user.response.Response;
 import per.cyh.user.thrift.ServiceProvider;
 
@@ -31,8 +33,12 @@ public class UserController {
     private RedisClient redisClient;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(){
+    public String login() {
         return "login";
+    }
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register() {
+        return "register";
     }
 
     @ResponseBody
@@ -59,23 +65,85 @@ public class UserController {
         // create token
         String token = genToken();
 
-        redisClient.set(token, userInfo,3600);
+        redisClient.set(token, toDTO(userInfo), 3600);
+
+        return new LoginResponse(token);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/sendVerifyCode", method = RequestMethod.POST)
+    public Response sendVerifyCode(@RequestParam(value = "mobile", required = false) String mobile,
+                                   @RequestParam(value = "email", required = false) String email) {
+        String message = "Verify code is:";
+        String code = randomCode("1234567890", 6);
+        try {
+            boolean result;
+            if (StringUtils.isNotBlank(mobile)) {
+                result = serviceProvider.getMessageService().sendMobileMessage(mobile, message + code);
+                redisClient.set(mobile, code);
+            } else if (StringUtils.isNotBlank(email)) {
+                result = serviceProvider.getMessageService().sendEmailMessage(email, message + code);
+                redisClient.set(email, code);
+            } else {
+                return Response.MOBILE_OR_EMAIL_REQUIRED;
+            }
+
+            if (!result) {
+                return Response.SEND_VERIFY_CODE_FAILED;
+            }
+        } catch (TException e) {
+            e.printStackTrace();
+            return Response.exception(e);
+        }
 
         return Response.SUCCESS;
     }
 
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Response register(UserInfo userInfo) {
+    public Response register(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam(value = "mobile", required = false) String mobile,
+                             @RequestParam(value = "email", required = false) String email,
+                             @RequestParam(value = "realName", required = false) String realName,
+                             @RequestParam("verifyCode") String verifyCode) {
+
+        if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            return Response.MOBILE_OR_EMAIL_REQUIRED;
+        }
+
+        if (StringUtils.isNotBlank(mobile)) {
+            String redisCode = redisClient.get(mobile);
+            if (!verifyCode.equals(redisCode)) {
+                return Response.VERIFY_CODE_INVALID;
+            }
+        } else {
+            String redisCode = redisClient.get(email);
+            if (!verifyCode.equals(redisCode)) {
+                return Response.VERIFY_CODE_INVALID;
+            }
+        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(username);
+        userInfo.setMobile(mobile);
+        userInfo.setPassword(md5(password));
+        userInfo.setRealName(realName);
+        userInfo.setEmail(email);
 
         try {
-            userInfo.setPassword(md5(userInfo.getPassword()));
             serviceProvider.getUserService().registerUser(userInfo);
         } catch (TException e) {
             e.printStackTrace();
-            return Response.REGISTER_ERROR;
+            return Response.exception(e);
         }
+
         return Response.SUCCESS;
+    }
+
+    public UserInfoDTO toDTO(UserInfo userInfo) {
+        UserInfoDTO userInfoDTO = new UserInfoDTO();
+        BeanUtils.copyProperties(userInfo, userInfoDTO);
+        return userInfoDTO;
     }
 
     private String genToken() {

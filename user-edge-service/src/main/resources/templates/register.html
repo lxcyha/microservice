@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <script>
+
+        const sendVerifyCode = () => {
+            const xhr = new XMLHttpRequest()
+            const mobileInputDom = document.getElementById('mobile')
+            const emailInputDom = document.getElementById('email')
+            xhr.open('post', 'sendVerifyCode', true)
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(`mobile=${mobileInputDom.value}&email=${emailInputDom.value}`)
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+<form action="register" method="post">
+
+    username:<input type="text" name="username"><br>
+    password:<input type="text" name="password"><br>
+    mobile:<input type="text" name="mobile" id="mobile"><br>
+    email:<input type="text" name="email" id="email"><br>
+    realName:<input type="text" name="realName"><br>
+    verifyCode:<input type="text" name="verifyCode"><br>
+    <button onclick="sendVerifyCode()" type="button"> send verify code</button>
+    <button type="submit">go go go</button>
+</form>
+
+
+</body>
+</html>

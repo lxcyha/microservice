@@ -21,11 +21,8 @@ public class UserInfoEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String realName;
-    @NotNull
     private String password;
-    @NotNull
     private String username;
     private String email;
-    @NotNull
     private String mobile;
 }

@@ -1,6 +1,7 @@
 package per.cyh.user.service;
 
 import org.apache.thrift.TException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import per.cyh.thrift.user.UserInfo;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService.Iface {
     UserRepository userRepository;
 
     public UserInfo getUserById(int id) throws TException {
+
+        System.out.println("getUserById");
+        System.out.println(id);
         return toThriftModel(userRepository.findById(id).get());
     }
 
@@ -26,28 +30,22 @@ public class UserServiceImpl implements UserService.Iface {
     }
 
     public void registerUser(UserInfo userInfo) throws TException {
+        System.out.println(userInfo);
         userRepository.save(toPojo(userInfo));
     }
 
     private UserInfoEntity toPojo(UserInfo userInfo) {
-
         UserInfoEntity userInfoEntity = new UserInfoEntity();
-        userInfoEntity.setPassword(userInfo.getPassword());
-        userInfoEntity.setEmail(userInfo.getEmail());
-        userInfoEntity.setId(userInfo.getId());
-        userInfoEntity.setRealName(userInfo.getRealName());
-        userInfoEntity.setMobile(userInfo.getMobile());
+        BeanUtils.copyProperties(userInfo,userInfoEntity);
         return userInfoEntity;
     }
 
     private UserInfo toThriftModel(UserInfoEntity userInfoEntity) {
-
+        if (userInfoEntity == null){
+            return null;
+        }
         UserInfo userInfo = new UserInfo();
-        userInfo.setPassword(userInfoEntity.getPassword());
-        userInfo.setEmail(userInfoEntity.getEmail());
-        userInfo.setId(userInfoEntity.getId());
-        userInfo.setRealName(userInfoEntity.getRealName());
-        userInfo.setMobile(userInfoEntity.getMobile());
+        BeanUtils.copyProperties(userInfoEntity,userInfo);
         return userInfo;
     }
 

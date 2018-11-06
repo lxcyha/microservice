@@ -1,4 +1,4 @@
-package per.cyh.user;
+package per.cyh.user.dto;
 
 
 import lombok.Getter;
