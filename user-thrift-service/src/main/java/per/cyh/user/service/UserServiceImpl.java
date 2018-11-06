@@ -20,8 +20,6 @@ public class UserServiceImpl implements UserService.Iface {
 
     public UserInfo getUserById(int id) throws TException {
 
-        System.out.println("getUserById");
-        System.out.println(id);
         return toThriftModel(userRepository.findById(id).get());
     }
 
@@ -30,7 +28,6 @@ public class UserServiceImpl implements UserService.Iface {
     }
 
     public void registerUser(UserInfo userInfo) throws TException {
-        System.out.println(userInfo);
         userRepository.save(toPojo(userInfo));
     }
 
