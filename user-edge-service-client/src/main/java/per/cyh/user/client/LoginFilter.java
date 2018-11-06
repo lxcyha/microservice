@@ -2,6 +2,8 @@ package per.cyh.user.client;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,8 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
-public class LoginFilter implements Filter {
+public abstract class LoginFilter implements Filter {
+
+    private static Cache<String, UserInfoDTO> cache = CacheBuilder.newBuilder().maximumSize(10000).expireAfterWrite(3, TimeUnit.SECONDS).build();
+
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
@@ -38,19 +44,33 @@ public class LoginFilter implements Filter {
             }
         }
 
+        UserInfoDTO userInfoDTO = null;
+
         if (StringUtils.isNotBlank(token)) {
-            UserInfoDTO userInfoDTO = requestUserInfo(token);
+
+            userInfoDTO = cache.getIfPresent("token");
+            if (userInfoDTO == null) {
+                userInfoDTO = requestUserInfo(token);
+                cache.put(token, userInfoDTO);
+            }
+
             if (userInfoDTO == null) {
                 httpServletResponse.sendRedirect("http://127.0.0.1/user/login");
                 return;
             }
+
+            login(httpServletRequest, httpServletResponse, userInfoDTO);
+
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
     }
 
+    protected abstract void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserInfoDTO userInfoDTO);
+
     private UserInfoDTO requestUserInfo(String token) {
-        String url = "localhost:8082/authentication";
+        String url = "http://127.0.0.1:8082/authentication";
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost();
+        HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("token", token);
         InputStream inputStream = null;
         try {
