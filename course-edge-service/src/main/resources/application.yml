@@ -1,0 +1,12 @@
+server:
+  name: course-edge-service
+  port: 8084
+thrift:
+  user:
+    ip: 127.0.0.1
+    port: 7911
+
+
+
+
+
