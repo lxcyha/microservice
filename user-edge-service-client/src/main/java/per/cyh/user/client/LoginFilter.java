@@ -36,12 +36,14 @@ public abstract class LoginFilter implements Filter {
 
         if (StringUtils.isBlank(token)) {
             Cookie[] cookies = httpServletRequest.getCookies();
-
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    token = cookie.getValue();
+            if (cookies!= null){
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("token")) {
+                        token = cookie.getValue();
+                    }
                 }
             }
+
         }
 
         UserInfoDTO userInfoDTO = null;
@@ -63,6 +65,9 @@ public abstract class LoginFilter implements Filter {
 
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
+        httpServletResponse.sendRedirect("http://127.0.0.1:8082/user/login");
+        return;
+
     }
 
     protected abstract void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserInfoDTO userInfoDTO);

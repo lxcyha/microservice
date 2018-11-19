@@ -3,6 +3,7 @@ package per.cyh.thrift.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 public class UserInfoDTO implements Serializable {
 
     private int id;

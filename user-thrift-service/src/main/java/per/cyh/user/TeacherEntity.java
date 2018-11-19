@@ -7,21 +7,19 @@ import lombok.ToString;
 import javax.persistence.*;
 
 /**
- * Created by cyh on 2018/11/3.
+ * Created by cyh on 2018/11/11.
  */
 @Entity
 @Setter
 @Getter
 @ToString
-@Table(name = "pe_userinfo")
-public class UserInfoEntity {
+@Table(name = "pe_teacher")
+public class TeacherEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String realName;
-    private String password;
-    private String username;
-    private String email;
-    private String mobile;
+    private String intro;
+    private int stars;
+
 }

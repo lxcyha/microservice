@@ -1,10 +1,16 @@
 server:
   name: course-edge-service
   port: 8084
-thrift:
-  user:
-    ip: 127.0.0.1
-    port: 7911
+
+
+#dubbo config
+spring:
+  dubbo:
+    application:
+      name: course-service
+    registry:
+      address: zookeeper://192.168.1.16:2181
+    scan: per.cyh.course
 
 
 

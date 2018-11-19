@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by cyh on 2018/11/10.
  */
-public interface CourseService {
+public interface ICourseService {
 
     List<CourseDTO> courseList();
 }

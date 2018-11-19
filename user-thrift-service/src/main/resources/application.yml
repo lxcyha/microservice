@@ -1,4 +1,4 @@
-server:
+service:
   name: user-thrift-service
   port: 7911
 spring:
