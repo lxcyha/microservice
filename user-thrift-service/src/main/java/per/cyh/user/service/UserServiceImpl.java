@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService.Iface {
 
     @Autowired
     UserRepository userRepository;
+
     @Autowired
     TeacherRepository teacherRepository;
 
@@ -53,6 +54,4 @@ public class UserServiceImpl implements UserService.Iface {
         BeanUtils.copyProperties(userInfoEntity, userInfo);
         return userInfo;
     }
-
-
 }

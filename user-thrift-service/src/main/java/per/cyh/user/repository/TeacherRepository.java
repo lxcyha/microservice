@@ -9,6 +9,5 @@ import per.cyh.user.UserInfoEntity;
  */
 public interface TeacherRepository extends CrudRepository<TeacherEntity, Integer> {
 
-    
     UserInfoEntity findTeacherEntityById(int id);
 }

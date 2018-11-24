@@ -34,6 +34,7 @@ public class UserController {
     public String login() {
         return "login";
     }
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register() {
         return "register";
@@ -78,10 +79,10 @@ public class UserController {
             boolean result;
             if (StringUtils.isNotBlank(mobile)) {
                 result = serviceProvider.getMessageService().sendMobileMessage(mobile, message + code);
-                redisClient.set(mobile, code);
+                redisClient.set(mobile, code, 3600);
             } else if (StringUtils.isNotBlank(email)) {
                 result = serviceProvider.getMessageService().sendEmailMessage(email, message + code);
-                redisClient.set(email, code);
+                redisClient.set(email, code, 3600);
             } else {
                 return Response.MOBILE_OR_EMAIL_REQUIRED;
             }
@@ -99,7 +100,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/authentication", method = RequestMethod.POST)
-    public UserInfoDTO authentication(@RequestHeader("token") String token){
+    public UserInfoDTO authentication(@RequestHeader("token") String token) {
         return redisClient.get(token);
     }
 

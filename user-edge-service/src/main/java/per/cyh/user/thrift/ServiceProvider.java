@@ -36,9 +36,6 @@ public class ServiceProvider {
         MESSAGE
     }
 
-    private MessageService.Client messageClient;
-    private UserService.Client userClient;
-
     public UserService.Client getUserService() {
         return (UserService.Client) getService(userServiceIp, userServicePort, ServiceType.USER);
     }
@@ -48,20 +45,9 @@ public class ServiceProvider {
     }
 
 
-    private <T> T getService(String host, int port, ServiceType serviceType) {
+    private  <T> T getService(String host, int port, ServiceType serviceType) {
 
-        switch (serviceType) {
-            case USER:
-                if (userClient != null) {
-                    return (T) userClient;
-                }
-                break;
-            case MESSAGE:
-                if (messageClient != null) {
-                    return (T) messageClient;
-                }
-                break;
-        }
+
         TSocket socket = new TSocket(host, port, 3000);
 
         TTransport transport = new TFramedTransport(socket);
@@ -77,11 +63,9 @@ public class ServiceProvider {
         switch (serviceType) {
             case USER:
                 client = new UserService.Client(protocol);
-                userClient = (UserService.Client) client;
                 break;
             case MESSAGE:
                 client = new MessageService.Client(protocol);
-                messageClient = (MessageService.Client) client;
                 break;
         }
         return (T) client;
