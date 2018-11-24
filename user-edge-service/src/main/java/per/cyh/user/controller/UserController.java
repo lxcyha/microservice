@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import per.cyh.thrift.user.UserInfo;
-import per.cyh.thrift.user.dto.UserInfoDTO;
+import per.cyh.thrift.user.dto.UserDTO;
 import per.cyh.user.redis.RedisClient;
 import per.cyh.user.response.LoginResponse;
 import per.cyh.user.response.Response;
@@ -100,7 +100,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/authentication", method = RequestMethod.POST)
-    public UserInfoDTO authentication(@RequestHeader("token") String token) {
+    public UserDTO authentication(@RequestHeader("token") String token) {
         return redisClient.get(token);
     }
 
@@ -145,10 +145,10 @@ public class UserController {
         return Response.SUCCESS;
     }
 
-    public UserInfoDTO toDTO(UserInfo userInfo) {
-        UserInfoDTO userInfoDTO = new UserInfoDTO();
-        BeanUtils.copyProperties(userInfo, userInfoDTO);
-        return userInfoDTO;
+    public UserDTO toDTO(UserInfo userInfo) {
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(userInfo, userDTO);
+        return userDTO;
     }
 
     private String genToken() {

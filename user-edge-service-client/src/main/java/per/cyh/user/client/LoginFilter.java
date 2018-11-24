@@ -9,8 +9,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import per.cyh.thrift.user.dto.UserInfoDTO;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import per.cyh.thrift.user.dto.UserDTO;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class LoginFilter implements Filter {
 
-    private static Cache<String, UserInfoDTO> cache = CacheBuilder.newBuilder().maximumSize(10000).expireAfterWrite(3, TimeUnit.SECONDS).build();
+    private static Cache<String, UserDTO> cache = CacheBuilder.newBuilder().maximumSize(10000).expireAfterWrite(3, TimeUnit.SECONDS).build();
 
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -46,35 +47,36 @@ public abstract class LoginFilter implements Filter {
 
         }
 
-        UserInfoDTO userInfoDTO = null;
+        UserDTO userDTO = null;
 
         if (StringUtils.isNotBlank(token)) {
 
-            userInfoDTO = cache.getIfPresent("token");
-            if (userInfoDTO == null) {
-                userInfoDTO = requestUserInfo(token);
-                cache.put(token, userInfoDTO);
+            userDTO = cache.getIfPresent("token");
+            if (userDTO == null) {
+                userDTO = requestUserInfo(token);
+                cache.put(token, userDTO);
             }
 
-            if (userInfoDTO == null) {
+            if (userDTO == null) {
                 httpServletResponse.sendRedirect("http://127.0.0.1:8082/user/login");
                 return;
             }
 
-            login(httpServletRequest, httpServletResponse, userInfoDTO);
+            login(httpServletRequest, httpServletResponse, userDTO);
 
             filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
         }
         httpServletResponse.sendRedirect("http://127.0.0.1:8082/user/login");
         return;
 
     }
 
-    protected abstract void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserInfoDTO userInfoDTO);
+    protected abstract void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserDTO userDTO);
 
-    private UserInfoDTO requestUserInfo(String token) {
-        String url = "http://127.0.0.1:8082/authentication";
-        HttpClient httpClient = new DefaultHttpClient();
+    private UserDTO requestUserInfo(String token) {
+        String url = "http://127.0.0.1:8082/user/authentication";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("token", token);
         InputStream inputStream = null;
@@ -91,8 +93,8 @@ public abstract class LoginFilter implements Filter {
             while ((len = inputStream.read(temp)) > 0) {
                 stringBuilder.append(new String(temp, 0, len));
             }
-            UserInfoDTO userInfoDTO = new ObjectMapper().readValue(stringBuilder.toString(), UserInfoDTO.class);
-            return userInfoDTO;
+            UserDTO userDTO = new ObjectMapper().readValue(stringBuilder.toString(), UserDTO.class);
+            return userDTO;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

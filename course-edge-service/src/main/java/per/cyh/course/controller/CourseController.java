@@ -1,13 +1,13 @@
 package per.cyh.course.controller;
 
-import org.springframework.data.annotation.Reference;
+import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import per.cyh.dubbo.course.ICourseService;
 import per.cyh.dubbo.course.dto.CourseDTO;
-import per.cyh.thrift.user.dto.UserInfoDTO;
+import per.cyh.thrift.user.dto.UserDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -26,12 +26,11 @@ public class CourseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List<CourseDTO> courseList(HttpServletRequest request) {
 
-        UserInfoDTO userInfoDTO = (UserInfoDTO) request.getAttribute("UserInfoDTO");
+        UserDTO userDTO = (UserDTO) request.getAttribute("UserDTO");
 
-        List<CourseDTO> userInfoDTOS = courseService.courseList();
-        System.out.println(userInfoDTOS);
-        System.out.println(userInfoDTO);
-        return  userInfoDTOS;
+        System.out.println(userDTO);
+        List<CourseDTO> courseDTOS = courseService.courseList();
+        return  courseDTOS;
     }
 
 }

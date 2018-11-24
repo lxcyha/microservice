@@ -31,16 +31,16 @@ public class ThriftServer {
 
     @PostConstruct
     public void startThriftServer(){
-        TProcessor processor = new UserService.Processor(userService);
+        TProcessor processor = new UserService.Processor<>(userService);
 
-        TServerSocket socket = null;
+        TNonblockingServerSocket socket = null;
         try {
-            socket = new TServerSocket(servicePort);
+            socket = new TNonblockingServerSocket(servicePort);
         } catch (TTransportException e) {
             e.printStackTrace();
         }
 
-        TServer.Args args = new TServer.Args(socket);
+        TNonblockingServer.Args args = new TNonblockingServer.Args(socket);
 
         args.processor(processor);
         args.transportFactory(new TFramedTransport.Factory());

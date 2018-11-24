@@ -1,14 +1,11 @@
 package per.cyh.user.service;
 
 import org.apache.thrift.TException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import per.cyh.thrift.user.UserInfo;
 import per.cyh.thrift.user.UserService;
-import per.cyh.user.UserInfoEntity;
-import per.cyh.user.repository.TeacherRepository;
-import per.cyh.user.repository.UserRepository;
+import per.cyh.user.mapper.UserMapper;
 
 /**
  * Created by cyh on 2018/10/23.
@@ -17,41 +14,22 @@ import per.cyh.user.repository.UserRepository;
 public class UserServiceImpl implements UserService.Iface {
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    TeacherRepository teacherRepository;
+    UserMapper userMapper;
 
     public UserInfo getUserById(int id) throws TException {
-
-        return toThriftModel(userRepository.findById(id).get());
+        return userMapper.getUserById(id);
     }
 
     public UserInfo getUserByName(String username) throws TException {
-        return toThriftModel(userRepository.findUserInfoEntityByUsername(username));
+        return userMapper.getUserByName(username);
     }
 
-    @Override
     public UserInfo getTeacherById(int id) throws TException {
-        return toThriftModel(teacherRepository.findTeacherEntityById(id));
+        UserInfo userInfo = userMapper.getTeacherById(id);
+        return userInfo;
     }
 
     public void registerUser(UserInfo userInfo) throws TException {
-        userRepository.save(toPojo(userInfo));
-    }
-
-    private UserInfoEntity toPojo(UserInfo userInfo) {
-        UserInfoEntity userInfoEntity = new UserInfoEntity();
-        BeanUtils.copyProperties(userInfo, userInfoEntity);
-        return userInfoEntity;
-    }
-
-    private UserInfo toThriftModel(UserInfoEntity userInfoEntity) {
-        if (userInfoEntity == null) {
-            return null;
-        }
-        UserInfo userInfo = new UserInfo();
-        BeanUtils.copyProperties(userInfoEntity, userInfo);
-        return userInfo;
+        userMapper.registerUser(userInfo);
     }
 }

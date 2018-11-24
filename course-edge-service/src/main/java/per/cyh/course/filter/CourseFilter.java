@@ -1,6 +1,6 @@
 package per.cyh.course.filter;
 
-import per.cyh.thrift.user.dto.UserInfoDTO;
+import per.cyh.thrift.user.dto.UserDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CourseFilter extends per.cyh.user.client.LoginFilter {
     @Override
-    protected void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserInfoDTO userInfoDTO) {
+    protected void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserDTO userDTO) {
 
-        httpServletRequest.setAttribute("UserInfoDTO", userInfoDTO);
+        httpServletRequest.setAttribute("UserDTO", userDTO);
 
     }
 }

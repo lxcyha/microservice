@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class UserInfoDTO implements Serializable {
+public class UserDTO implements Serializable {
 
     private int id;
     private String username;
@@ -21,7 +21,4 @@ public class UserInfoDTO implements Serializable {
     private String email;
     private String mobile;
     private String realName;
-    private String token;
-
-
 }
