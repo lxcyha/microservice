@@ -7,8 +7,9 @@
 #  options string: py
 #
 
-import sys
 import pprint
+import sys
+
 if sys.version_info[0] > 2:
     from urllib.parse import urlparse
 else:
@@ -17,7 +18,6 @@ from thrift.transport import TTransport, TSocket, TSSLSocket, THttpClient
 from thrift.protocol.TBinaryProtocol import TBinaryProtocol
 
 from message.api import MessageService
-from message.api.ttypes import *
 
 if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')

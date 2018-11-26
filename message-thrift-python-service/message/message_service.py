@@ -1,14 +1,13 @@
-from message.api import MessageService
+import smtplib
+from email.header import Header
+from email.mime.text import MIMEText
 
-from thrift.transport import TSocket
-from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
+from thrift.transport import TSocket
+from thrift.transport import TTransport
 
-import smtplib
-
-from email.mime.text import MIMEText
-from email.header import Header
+from message.api import MessageService
 
 sender = 'your-email@xx.com'
 authCode = 'email authCode'
