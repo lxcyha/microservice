@@ -29,7 +29,7 @@ class MessageServiceHandler:
         messageObject['Subject'] = Header('email subject', 'utf-8')
 
         try:
-            smtpObject = smtplib.SMTP('smpt.xxx.com')
+            smtpObject = smtplib.SMTP('smtp.xxx.com')
             smtpObject.login(sender, authCode)
             smtpObject.sendmail(sender, [email], messageObject.as_string())
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     handler = MessageServiceHandler()
     processor = MessageService.Processor(handler)
 
-    transport = TSocket.TServerSocket(host="127.0.0.1", port=9090)
+    transport = TSocket.TServerSocket(None, port=9090)
 
     tFactory = TTransport.TFramedTransportFactory()
 
