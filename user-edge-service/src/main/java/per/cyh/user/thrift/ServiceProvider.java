@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import per.cyh.thrift.message.MessageService;
 import per.cyh.thrift.user.UserService;
-import sun.plugin2.message.Message;
 
 /**
  * Created by cyh on 2018/10/26.
