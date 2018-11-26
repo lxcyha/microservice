@@ -59,7 +59,7 @@ public abstract class LoginFilter implements Filter {
             }
 
             if (userDTO == null) {
-                httpServletResponse.sendRedirect("http://127.0.0.1:8085/user/login");
+                httpServletResponse.sendRedirect("http://user-edge-service:8082/user/login");
                 return;
             }
 
@@ -68,7 +68,7 @@ public abstract class LoginFilter implements Filter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        httpServletResponse.sendRedirect("http://127.0.0.1:8085/user/login");
+        httpServletResponse.sendRedirect("http://user-edge-service:8082/user/login");
         return;
 
     }
