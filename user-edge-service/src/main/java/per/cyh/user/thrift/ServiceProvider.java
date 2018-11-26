@@ -37,7 +37,6 @@ public class ServiceProvider {
     }
 
     private MessageService.Client messageClient;
-    private UserService.Client userClient;
 
     public UserService.Client getUserService() {
         return (UserService.Client) getService(userServiceIp, userServicePort, ServiceType.USER);
@@ -71,7 +70,7 @@ public class ServiceProvider {
         TServiceClient client = null;
         switch (serviceType) {
             case USER:
-                client =  (UserService.Client) new UserService.Client(protocol);
+                client =  new UserService.Client(protocol);
                 break;
             case MESSAGE:
                 client = new MessageService.Client(protocol);
