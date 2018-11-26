@@ -13,15 +13,15 @@ import java.util.List;
 /**
  * Created by cyh on 2018/10/25.
  */
-    @SpringBootApplication
-    public class CourseEdgeServiceApplication {
+@SpringBootApplication
+public class CourseEdgeServiceApplication {
 
-        public static void main(String[] args) {
-            SpringApplication.run(CourseEdgeServiceApplication.class, args);
-        }
+    public static void main(String[] args) {
+        SpringApplication.run(CourseEdgeServiceApplication.class, args);
+    }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean(){
+    public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new CourseFilter());
 

@@ -7,7 +7,6 @@ import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -54,11 +53,13 @@ public abstract class LoginFilter implements Filter {
             userDTO = cache.getIfPresent("token");
             if (userDTO == null) {
                 userDTO = requestUserInfo(token);
-                cache.put(token, userDTO);
+                if (userDTO != null) {
+                    cache.put(token, userDTO);
+                }
             }
 
             if (userDTO == null) {
-                httpServletResponse.sendRedirect("http://127.0.0.1:8082/user/login");
+                httpServletResponse.sendRedirect("http://127.0.0.1:8085/user/login");
                 return;
             }
 
@@ -67,7 +68,7 @@ public abstract class LoginFilter implements Filter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        httpServletResponse.sendRedirect("http://127.0.0.1:8082/user/login");
+        httpServletResponse.sendRedirect("http://127.0.0.1:8085/user/login");
         return;
 
     }
@@ -75,7 +76,7 @@ public abstract class LoginFilter implements Filter {
     protected abstract void login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, UserDTO userDTO);
 
     private UserDTO requestUserInfo(String token) {
-        String url = "http://127.0.0.1:8082/user/authentication";
+        String url = "http://127.0.0.1:8085/user/authentication";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("token", token);
