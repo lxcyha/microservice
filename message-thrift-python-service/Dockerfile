@@ -1,4 +1,4 @@
-FROM python-base:latest
+FROM python:3.6
 MAINTAINER lxcyha lxcyha@gmail.com
 
 ENV PYTHONEPATH /
