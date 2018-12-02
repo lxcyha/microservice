@@ -10,14 +10,15 @@ thrift:
     port: 9090
 spring:
   redis:
-    port: 6380
     host: ${redis.address}
     timeout: 10000
+    port: 6380
   thymeleaf:
     cache: false
   cache:
     redis:
       time-to-live: 10000
+
 
 
 
