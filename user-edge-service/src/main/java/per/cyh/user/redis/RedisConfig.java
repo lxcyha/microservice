@@ -35,7 +35,6 @@ public class RedisConfig extends CachingConfigurerSupport{
     @Value("${spring.redis.host}")
     private String host;
 
-
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
 

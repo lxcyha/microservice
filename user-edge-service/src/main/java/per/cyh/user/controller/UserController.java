@@ -76,7 +76,7 @@ public class UserController {
         String message = "Verify code is:";
         String code = randomCode("1234567890", 6);
         try {
-            boolean result;
+            boolean result =false;
             if (StringUtils.isNotBlank(mobile)) {
                 result = serviceProvider.getMessageService().sendMobileMessage(mobile, message + code);
                 redisClient.set(mobile, code, 3600);
