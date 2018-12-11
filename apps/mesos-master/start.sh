@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 docker run -d --net=host \
+  --hostname=192.168.1.16 \
   -e MESOS_PORT=5050 \
   -e MESOS_ZK=zk://192.168.1.16:2181/mesos \
   -e MESOS_QUORUM=1 \
@@ -8,4 +9,4 @@ docker run -d --net=host \
   -e MESOS_WORK_DIR=/var/tmp/mesos \
   -v "$(pwd)/log/mesos:/var/log/mesos" \
   -v "$(pwd)/tmp/mesos:/var/tmp/mesos" \
-  mesosphere/mesos-master:1.4.1
+  mesosphere/mesos-master:1.4.1 --no-hostname_lookup -ip=192.168.1.16
