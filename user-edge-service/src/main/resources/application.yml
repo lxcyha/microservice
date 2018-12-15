@@ -3,11 +3,11 @@ server:
   port: 8082
 thrift:
   user:
-    ip: user-service
-    port: 7911
+    ip: lb.lxcyha.com
+    port: 10001
   message:
-    ip: message-service
-    port: 9090
+    ip: lb.lxcyha.com
+    port: 10002
 spring:
   redis:
     host: ${redis.address}

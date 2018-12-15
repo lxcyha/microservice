@@ -2,7 +2,10 @@ server:
   name: course-edge-service
   port: 8084
 
-
+user:
+  edge:
+    service:
+      addr: lb.lxcyha.com:10003
 #dubbo config
 spring:
   dubbo:

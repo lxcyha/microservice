@@ -21,9 +21,9 @@ public class CourseEdgeServiceApplication {
     }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean() {
+    public FilterRegistrationBean filterRegistrationBean(CourseFilter courseFilter) {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new CourseFilter());
+        filterRegistrationBean.setFilter(courseFilter);
 
         List<String> urlPattern = new ArrayList<>();
         urlPattern.add("/*");
