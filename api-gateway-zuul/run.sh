@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker run -it api-gateway-zuul:latest
+docker run -it lxcyha/api-gateway-zuul:latest
