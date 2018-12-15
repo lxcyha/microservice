@@ -4,7 +4,7 @@ docker run -d --net=host --privileged \
   -e MESOS_PORT=5051 \
   -e MESOS_MASTER=zk://192.168.1.16:2181/mesos \
   -e MESOS_SWITCH_USER=0 \
-  -e MESOS_CONTAINERIZERS=docker \
+  -e MESOS_CONTAINERIZERS=docker,mesos \
   -e MESOS_LOG_DIR=/var/log/mesos \
   -e MESOS_WORK_DIR=/var/tmp/mesos \
   -v "$(pwd)/log/mesos:/var/log/mesos" \
