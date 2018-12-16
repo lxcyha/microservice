@@ -5,10 +5,10 @@ zuul:
   routes:
     course:
       path: /course/**
-      url: http://lb.lxcyha.com:10004/course/
+      url: http://192.168.1.16:10004/course/
     user:
       path: /user/**
-      url: http://lb.lxcyha.com:10003/user/
+      url: http://192.168.1.16:10003/user/
 spring:
   profiles:
     active: true
