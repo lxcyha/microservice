@@ -5,7 +5,7 @@ server:
 user:
   edge:
     service:
-      addr: 192.168.1.1:10003
+      addr: 192.168.1.16:10003
 #dubbo config
 spring:
   dubbo:
